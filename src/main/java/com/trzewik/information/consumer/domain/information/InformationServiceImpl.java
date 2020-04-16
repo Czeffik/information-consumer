@@ -9,8 +9,27 @@ class InformationServiceImpl implements InformationService {
     private final InformationReceiver receiver;
 
     @Override
-    public Information getInformation(String id) {
+    public Information get(String id) {
         return receiver.getInformation(id);
     }
 
+    @Override
+    public Information create(InformationForm form) {
+        return null;
+    }
+
+    @Override
+    public Information update(String id, InformationForm form) {
+        return null;
+    }
+
+    @Override
+    public Information replace(String id, InformationForm form) {
+        return null;
+    }
+
+    @Override
+    public Information delete(String id) {
+        return null;
+    }
 }

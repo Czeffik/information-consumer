@@ -1,0 +1,5 @@
+url:
+  information:
+    producer: localhost:8090
+server:
+  port: 8071
