@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
         DomainConfiguration.class,
         InfrastructureConfiguration.class,
         InterfacesConfiguration.class,
+
         ConfigurationPropertiesAutoConfiguration.class,
         PropertyPlaceholderAutoConfiguration.class
     }
