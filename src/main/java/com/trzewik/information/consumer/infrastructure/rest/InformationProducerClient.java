@@ -1,12 +1,67 @@
 package com.trzewik.information.consumer.infrastructure.rest;
 
+import com.trzewik.information.consumer.domain.information.Information;
+import com.trzewik.information.consumer.domain.information.InformationClient;
+import com.trzewik.information.consumer.domain.information.InformationService;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClientsConfiguration;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "InformationProducer", url = "${url.information.producer}", configuration = FeignConfig.class)
-public interface InformationProducerClient {
+/**
+ * You can create your FeignConfiguration class for defining some behaviour, for example:
+ * - ErrorDecoder - for some error handling
+ * {@link feign.codec.Decoder}, {@link feign.codec.Encoder}, {@link feign.Contract}
+ *
+ * @see FeignClientsConfiguration for the defaults
+ */
+@FeignClient(name = "InformationProducer", url = "${url.information.producer}")
+public interface InformationProducerClient extends InformationClient {
 
-    @GetMapping("/information/{id}")
+    default Information get(String id) {
+        return getInformation(id).toInformation();
+    }
+
+    @GetMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     InformationDto getInformation(@PathVariable(value = "id") String id);
+
+    default Information create(InformationService.InformationForm form) {
+        return createInformation(form).toInformation();
+    }
+
+    @PostMapping(value = "/information", consumes = MediaType.APPLICATION_JSON_VALUE)
+    InformationDto createInformation(@RequestBody InformationService.InformationForm form);
+
+    default Information update(String id, InformationService.InformationForm form) {
+        return updateInformation(id, form).toInformation();
+    }
+
+    @PutMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    InformationDto updateInformation(
+        @PathVariable(value = "id") String id,
+        @RequestBody InformationService.InformationForm form
+    );
+
+    default Information replace(String id, InformationService.InformationForm form) {
+        return patchInformation(id, form).toInformation();
+    }
+
+    @PatchMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    InformationDto patchInformation(
+        @PathVariable(value = "id") String id,
+        @RequestBody InformationService.InformationForm form
+    );
+
+    default Information delete(String id) {
+        return deleteInformation(id).toInformation();
+    }
+
+    @DeleteMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    InformationDto deleteInformation(@PathVariable(value = "id") String id);
 }

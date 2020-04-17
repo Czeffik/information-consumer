@@ -6,30 +6,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 class InformationServiceImpl implements InformationService {
-    private final InformationReceiver receiver;
+    private final InformationClient client;
 
     @Override
     public Information get(String id) {
-        return receiver.getInformation(id);
+        return client.get(id);
     }
 
     @Override
     public Information create(InformationForm form) {
-        return null;
+        return client.create(form);
     }
 
     @Override
     public Information update(String id, InformationForm form) {
-        return null;
+        return client.update(id, form);
     }
 
     @Override
     public Information replace(String id, InformationForm form) {
-        return null;
+        return client.replace(id, form);
     }
 
     @Override
     public Information delete(String id) {
-        return null;
+        return client.delete(id);
     }
 }

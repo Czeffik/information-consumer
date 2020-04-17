@@ -106,19 +106,12 @@ public class InformationController {
         return InformationDto.from(informationService.delete(id));
     }
 
-
-    @ExceptionHandler(value = {NullPointerException.class})
-    public ResponseEntity<Object> handleBadRequest(NullPointerException ex) {
-        String message = ex.getMessage();
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorDto response = new ErrorDto(message, status);
-        return new ResponseEntity<>(response, status);
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<Object> handleInternalServerError(Exception ex) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(value = {Exception.class})
-    public ResponseEntity<Object> handlInternalServerError(Exception ex) {
-        String message = ex.getMessage();
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+    private ResponseEntity<Object> getResponseEntity(String message, HttpStatus status) {
         ErrorDto response = new ErrorDto(message, status);
         return new ResponseEntity<>(response, status);
     }
