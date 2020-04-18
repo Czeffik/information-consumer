@@ -1,4 +1,4 @@
-package com.trzewik.information.consumer.infrastructure.rest;
+package com.trzewik.information.consumer.infrastructure.rest.information;
 
 import com.trzewik.information.consumer.domain.information.Information;
 import com.trzewik.information.consumer.domain.information.InformationClient;
@@ -38,22 +38,22 @@ public interface InformationProducerClient extends InformationClient {
     @PostMapping(value = "/information", consumes = MediaType.APPLICATION_JSON_VALUE)
     InformationDto createInformation(@RequestBody InformationService.InformationForm form);
 
-    default Information update(String id, InformationService.InformationForm form) {
-        return updateInformation(id, form).toInformation();
+    default Information replace(String id, InformationService.InformationForm form) {
+        return replaceInformation(id, form).toInformation();
     }
 
     @PutMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    InformationDto updateInformation(
+    InformationDto replaceInformation(
         @PathVariable(value = "id") String id,
         @RequestBody InformationService.InformationForm form
     );
 
-    default Information replace(String id, InformationService.InformationForm form) {
-        return patchInformation(id, form).toInformation();
+    default Information update(String id, InformationService.InformationForm form) {
+        return updateInformation(id, form).toInformation();
     }
 
     @PatchMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    InformationDto patchInformation(
+    InformationDto updateInformation(
         @PathVariable(value = "id") String id,
         @RequestBody InformationService.InformationForm form
     );

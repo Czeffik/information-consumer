@@ -1,4 +1,4 @@
-package com.trzewik.information.consumer.infrastructure.rest;
+package com.trzewik.information.consumer.infrastructure.rest.information;
 
 import com.trzewik.information.consumer.domain.information.Car;
 import lombok.AllArgsConstructor;

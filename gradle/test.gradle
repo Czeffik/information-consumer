@@ -25,6 +25,7 @@ dependencies {
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner:${springCloudVersion}"
 
     testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 }
