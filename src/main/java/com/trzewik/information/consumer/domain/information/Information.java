@@ -1,11 +1,13 @@
 package com.trzewik.information.consumer.domain.information;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Information {
     private final String id;
