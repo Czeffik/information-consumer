@@ -7,18 +7,6 @@ trait CarCreation {
         return creators.collect { createCar(it) }
     }
 
-    List<Car> createCarsFrom(List<CarForm> forms) {
-        return forms.collect { createCarFrom(it) }
-    }
-
-    Car createCarFrom(CarForm form) {
-        return new Car(
-            form.brand,
-            form.model,
-            form.color
-        )
-    }
-
     Car createCar(CarCreator creator = new CarCreator()) {
         return new Car(
             creator.brand,
@@ -31,5 +19,13 @@ trait CarCreation {
         String brand = 'example brand'
         String model = 'example model'
         String color = 'example color'
+
+        CarCreator() {}
+
+        CarCreator(CarForm form) {
+            this.brand = form.brand
+            this.model = form.model
+            this.color = form.color
+        }
     }
 }

@@ -3,15 +3,6 @@ package com.trzewik.information.consumer.domain.information
 import com.trzewik.information.consumer.domain.information.InformationService.InformationForm
 
 trait InformationCreation implements CarCreation, PersonCreation {
-    Information createInformationFrom(InformationForm form, String id = 'id for information created from form') {
-        return new Information(
-            id,
-            form.description,
-            form.message,
-            createPersonFrom(form.person),
-            createCarsFrom(form.cars)
-        )
-    }
 
     Information createInformation(InformationCreator creator = new InformationCreator()) {
         return new Information(
@@ -25,11 +16,21 @@ trait InformationCreation implements CarCreation, PersonCreation {
 
 
     static class InformationCreator {
-        String id = 'example test id'
+        String id = 'example-test-id'
         String description = 'example description'
         String message = 'example message'
         PersonCreator personCreator = new PersonCreator()
         List<CarCreator> carCreators = [new CarCreator(), new CarCreator()]
+
+        InformationCreator() {}
+
+        InformationCreator(String id, InformationForm form) {
+            this.id = id
+            this.description = form.description
+            this.message = form.message
+            this.personCreator = new PersonCreator(form.person)
+            this.carCreators = form.cars.collect { new CarCreator(it) }
+        }
     }
 
 }

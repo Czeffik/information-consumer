@@ -27,7 +27,7 @@ class InformationServiceUT extends Specification implements InformationCreation,
         given:
             def form = createInformationForm()
         and:
-            def information = createInformationFrom(form)
+            def information = createInformation(new InformationCreator(form))
         when:
             def returnedInformation = service.create(form)
         then:
@@ -42,7 +42,7 @@ class InformationServiceUT extends Specification implements InformationCreation,
         and:
             def form = createInformationForm()
         and:
-            def updatedInformation = createInformationFrom(form, id)
+            def updatedInformation = createInformation(new InformationCreator(id, form))
         when:
             def returnedInformation = service.update(id, form)
         then:
@@ -57,7 +57,7 @@ class InformationServiceUT extends Specification implements InformationCreation,
         and:
             def form = createInformationForm()
         and:
-            def replacedInformation = createInformationFrom(form, id)
+            def replacedInformation = createInformation(new InformationCreator(id, form))
         when:
             def returnedInformation = service.replace(id, form)
         then:
