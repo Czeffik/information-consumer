@@ -11,41 +11,32 @@ import com.trzewik.information.consumer.interfaces.rest.information.InformationR
 import com.trzewik.information.consumer.interfaces.rest.information.InformationResponseValidator
 import groovy.json.JsonSlurper
 import io.restassured.response.Response
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import spock.lang.Shared
 import spock.lang.Specification
 
 @ActiveProfiles(['test'])
 @SpringBootTest(
     classes = [App],
     properties = [
-        'url.information.producer=localhost:9080'
+        'url.information.producer=localhost:${wiremock.server.port}'
     ],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @DirtiesContext
-/**
- * TODO:
- * This class should use @AutoConfigureWireMock annotation
- * but currently it is not possible because of issue:
- * https://github.com/spring-cloud/spring-cloud-contract/issues/665
- */
+@AutoConfigureWireMock(port = 9080)
 class AppFT extends Specification implements InformationCreation, InformationRequestSender, InformationProducerVerifying,
     InformationFormCreation, InformationProducerStubbing, InformationResponseValidator {
 
     @LocalServerPort
     int localServerPort
 
-    @Shared
+    @Autowired
     WireMockServer wireMockServer
-
-    def setupSpec() {
-        wireMockServer = new WireMockServer(9080)
-        wireMockServer.start()
-    }
 
     def setup() {
         setServer(wireMockServer)
@@ -55,10 +46,6 @@ class AppFT extends Specification implements InformationCreation, InformationReq
 
     def cleanup() {
         clearStubs()
-    }
-
-    def cleanupSpec() {
-        wireMockServer.stop()
     }
 
     def 'should create information'() {
