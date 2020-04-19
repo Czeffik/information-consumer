@@ -34,8 +34,6 @@ trait InformationResponseValidator {
     }
 
     void validateCars(parsedCars, List<Car> cars) {
-        parsedCars.each { pc ->
-            assert cars.any { it == createCar(new CarCreation.CarCreator(brand: pc.brand, model: pc.model, color: pc.color)) }
-        }
+        assert parsedCars.collect { createCar(new CarCreation.CarCreator(brand: it.brand, model: it.model, color: it.color)) } == cars
     }
 }
