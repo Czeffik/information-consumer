@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.trzewik.information.consumer.domain.information.InformationCreation
 import com.trzewik.information.consumer.domain.information.InformationFormCreation
 import com.trzewik.information.consumer.infrastructure.rest.RestInfrastructureConfiguration
+import feign.FeignException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.context.ContextConfiguration
@@ -104,6 +105,57 @@ class InformationProducerClientIT extends Specification implements InformationPr
             def received = client.delete(information.id)
         then:
             received == information
+    }
+
+    def 'should throw exception when returned bad request'(){
+        given:
+            def information = createInformation()
+        and:
+            stubBadRequest(information)
+        when:
+            client.get(information.id)
+        then:
+            FeignException ex = thrown()
+        and:
+            with(ex.message){
+                contains(errorResponseBody())
+                contains('[400 Bad Request] during [GET] to')
+                contains(information.id)
+            }
+    }
+
+    def 'should throw exception when returned not found'(){
+        given:
+            def information = createInformation()
+        and:
+            stubNotFound(information)
+        when:
+            client.get(information.id)
+        then:
+            FeignException ex = thrown()
+        and:
+            with(ex.message){
+                contains(errorResponseBody())
+                contains('[404 Not Found] during [GET] to')
+                contains(information.id)
+            }
+    }
+
+    def 'should throw exception when returned internal server error'(){
+        given:
+            def information = createInformation()
+        and:
+            stubInternalServerError(information)
+        when:
+            client.get(information.id)
+        then:
+            FeignException ex = thrown()
+        and:
+            with(ex.message){
+                contains(errorResponseBody())
+                contains('[500 Server Error] during [GET] to')
+                contains(information.id)
+            }
     }
 
 }

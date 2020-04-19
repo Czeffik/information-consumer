@@ -27,7 +27,7 @@ class InformationServiceUT extends Specification implements InformationCreation,
         given:
             def form = createInformationForm()
         and:
-            def information = createInformation(new InformationCreator(form))
+            def information = createInformation(new InformationCreator('id-of-created-information', form))
         when:
             def returnedInformation = service.create(form)
         then:
@@ -67,7 +67,7 @@ class InformationServiceUT extends Specification implements InformationCreation,
     }
 
     def 'should delete and return deleted information using information client'() {
-        given: 2
+        given:
             def id = 'deleted information id'
         and:
             def deletedInformation = createInformation(new InformationCreator(id: id))

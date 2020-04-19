@@ -5,11 +5,14 @@ import com.trzewik.information.consumer.domain.information.Information
 import groovy.json.JsonBuilder
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import static com.github.tomakehurst.wiremock.client.WireMock.badRequest
 import static com.github.tomakehurst.wiremock.client.WireMock.delete
 import static com.github.tomakehurst.wiremock.client.WireMock.get
+import static com.github.tomakehurst.wiremock.client.WireMock.notFound
 import static com.github.tomakehurst.wiremock.client.WireMock.patch
 import static com.github.tomakehurst.wiremock.client.WireMock.post
 import static com.github.tomakehurst.wiremock.client.WireMock.put
+import static com.github.tomakehurst.wiremock.client.WireMock.serverError
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 
 trait InformationProducerStubbing {
@@ -55,8 +58,32 @@ trait InformationProducerStubbing {
         )
     }
 
+    void stubBadRequest(Information information) {
+        server.stubFor(get(urlEqualTo("/information/${information.id}"))
+            .willReturn(badRequest().withBody(errorResponseBody())))
+    }
+
+    void stubNotFound(Information information) {
+        server.stubFor(get(urlEqualTo("/information/${information.id}"))
+            .willReturn(notFound().withBody(errorResponseBody())))
+    }
+
+    void stubInternalServerError(Information information) {
+        server.stubFor(get(urlEqualTo("/information/${information.id}"))
+            .willReturn(serverError().withBody(errorResponseBody())))
+    }
+
+
     void clearStubs() {
         server.resetAll()
+    }
+
+    String errorResponseBody() {
+        return """{
+            "message": "Can not find information with id: [1231] in repository.",
+            "code": 999,
+            "reason": "Test Reason"
+            }"""
     }
 
     String toJson(Object object) {
