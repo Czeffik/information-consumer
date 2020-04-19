@@ -107,7 +107,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
             received == information
     }
 
-    def 'should throw exception when returned bad request'(){
+    def 'should throw exception when returned bad request'() {
         given:
             def information = createInformation()
         and:
@@ -117,14 +117,14 @@ class InformationProducerClientIT extends Specification implements InformationPr
         then:
             FeignException ex = thrown()
         and:
-            with(ex.message){
+            with(ex.message) {
                 contains(errorResponseBody())
                 contains('[400 Bad Request] during [GET] to')
                 contains(information.id)
             }
     }
 
-    def 'should throw exception when returned not found'(){
+    def 'should throw exception when returned not found'() {
         given:
             def information = createInformation()
         and:
@@ -134,14 +134,14 @@ class InformationProducerClientIT extends Specification implements InformationPr
         then:
             FeignException ex = thrown()
         and:
-            with(ex.message){
+            with(ex.message) {
                 contains(errorResponseBody())
                 contains('[404 Not Found] during [GET] to')
                 contains(information.id)
             }
     }
 
-    def 'should throw exception when returned internal server error'(){
+    def 'should throw exception when returned internal server error'() {
         given:
             def information = createInformation()
         and:
@@ -151,7 +151,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
         then:
             FeignException ex = thrown()
         and:
-            with(ex.message){
+            with(ex.message) {
                 contains(errorResponseBody())
                 contains('[500 Server Error] during [GET] to')
                 contains(information.id)

@@ -66,7 +66,7 @@ public class InformationController {
     })
     @PutMapping(value = "/information/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public InformationDto updateInformation(
+    public InformationDto replaceInformation(
         @ApiParam(required = true, value = "Id of information to replace") @PathVariable(value = "id") String id,
         @ApiParam(required = true, value = "Information object") @RequestBody InformationService.InformationForm form
     ) {
@@ -83,7 +83,7 @@ public class InformationController {
     })
     @PatchMapping(value = "/information/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public InformationDto patchInformation(
+    public InformationDto updateInformation(
         @ApiParam(required = true, value = "Id of information to update") @PathVariable(value = "id") String id,
         @ApiParam(required = true, value = "Information object") @RequestBody InformationService.InformationForm form
     ) {
