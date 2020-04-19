@@ -33,7 +33,7 @@ public class RestInterfacesConfiguration implements WebMvcConfigurer {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
             .select()
-            .apis(RequestHandlerSelectors.basePackage("com.trzewik.information.producer.interfaces.rest"))
+            .apis(RequestHandlerSelectors.basePackage("com.trzewik.information.consumer.interfaces.rest"))
             .paths(PathSelectors.any())
             .build();
     }
