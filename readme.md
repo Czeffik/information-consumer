@@ -29,4 +29,4 @@ If you want change that you can override properties:
 - `url.information.producer` - will change [information-producer-service](https://github.com/Czeffik/information-producer)
 address
 
-Application expose [SWAGGER-UI](localhost:8071/swagger-ui.html).
+Application expose [SWAGGER-UI](http://localhost:8071/swagger-ui.html).
