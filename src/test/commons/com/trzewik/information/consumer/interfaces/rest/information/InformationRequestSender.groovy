@@ -1,10 +1,12 @@
 package com.trzewik.information.consumer.interfaces.rest.information
 
+
 import com.trzewik.information.consumer.domain.information.InformationService
 import com.trzewik.information.consumer.interfaces.rest.RequestSender
-import groovy.json.JsonBuilder
 import io.restassured.http.ContentType
 import io.restassured.response.Response
+
+import static com.trzewik.information.consumer.common.JsonHelper.toJson
 
 trait InformationRequestSender extends RequestSender {
 
@@ -42,9 +44,5 @@ trait InformationRequestSender extends RequestSender {
         return request("/information/${id}")
             .delete()
             .thenReturn()
-    }
-
-    String toJson(Object object) {
-        return new JsonBuilder(object).toPrettyString()
     }
 }

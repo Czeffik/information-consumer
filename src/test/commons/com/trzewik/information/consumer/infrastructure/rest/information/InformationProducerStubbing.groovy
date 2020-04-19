@@ -2,7 +2,6 @@ package com.trzewik.information.consumer.infrastructure.rest.information
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.trzewik.information.consumer.domain.information.Information
-import groovy.json.JsonBuilder
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.badRequest
@@ -14,6 +13,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post
 import static com.github.tomakehurst.wiremock.client.WireMock.put
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
+import static com.trzewik.information.consumer.common.JsonHelper.toJson
 
 trait InformationProducerStubbing {
     WireMockServer server
@@ -86,7 +86,5 @@ trait InformationProducerStubbing {
             }"""
     }
 
-    String toJson(Object object) {
-        return new JsonBuilder(object).toPrettyString()
-    }
+
 }
