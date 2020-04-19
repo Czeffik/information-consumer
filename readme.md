@@ -5,8 +5,15 @@ from [information-producer-service](https://github.com/Czeffik/information-produ
 Currently, implemented as gateway - this app doesn't modify data consumed from `information-producer-service`.
 
 ## Build
+
+LINUX:
 ```shell script
 ./gradlew clean build
+```
+
+WINDOWS:
+```shell script
+gradlew clean build
 ```
 
 ## Test
