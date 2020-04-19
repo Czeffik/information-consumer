@@ -1,19 +1,19 @@
 package com.trzewik.information.consumer.domain.information
 
-trait InformationFormCreation {
+trait InformationFormCreation implements CarFormCreation, PersonFormCreation {
     InformationService.InformationForm createInformationForm(InformationFormCreator creator = new InformationFormCreator()) {
         return new InformationService.InformationForm(
             description: creator.description,
             message: creator.message,
-            person: creator.person,
-            cars: creator.cars
+            person: createPersonForm(creator.person),
+            cars: createCarForms(creator.cars)
         )
     }
 
-    static class InformationFormCreator implements CarFormCreation, PersonFormCreation {
+    static class InformationFormCreator {
         String description = 'example form description'
         String message = 'example form message'
-        InformationService.PersonForm person = createPersonForm()
-        List<InformationService.CarForm> cars = createCarForms()
+        PersonFormCreator person = new PersonFormCreator()
+        List<CarFormCreator> cars = [new CarFormCreator(), new CarFormCreator()]
     }
 }
