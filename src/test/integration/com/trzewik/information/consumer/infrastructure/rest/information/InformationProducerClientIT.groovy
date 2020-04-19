@@ -7,6 +7,7 @@ import com.trzewik.information.consumer.infrastructure.rest.RestInfrastructureCo
 import feign.FeignException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
@@ -20,12 +21,15 @@ import spock.lang.Specification
     ]
 )
 /**
- * This class should be replaced with @AutoConfigureWireMock(port = 0) - start on random port, when this issue:
+ * This should be replaced with @AutoConfigureWireMock(port = 0) - start on random port, when this issue:
  * https://github.com/spring-cloud/spring-cloud-contract/issues/1303
  * will be fixed in `spring-cloud-starter-contract-stub-runner`
  */
 @AutoConfigureWireMock(port = 9090)
-class InformationProducerClientIT extends Specification implements InformationProducerStubbing, InformationCreation, InformationFormCreation {
+@DirtiesContext
+class InformationProducerClientIT extends Specification implements InformationProducerStubbing, InformationProducerVerifying,
+    InformationCreation, InformationFormCreation {
+
     @Autowired
     InformationProducerClient client
 
@@ -33,7 +37,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
     WireMockServer wireMockServer
 
     def setup() {
-        server = wireMockServer
+        setServer(wireMockServer)
     }
 
     def cleanup() {
@@ -48,6 +52,10 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             def received = client.get(information.id)
         then:
+            verifyGetInformationRequest(information.id)
+        and:
+            verifyAllRequestsMatched()
+        and:
             received == information
     }
 
@@ -63,6 +71,10 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             def received = client.create(form)
         then:
+            verifyPostInformationRequest(form)
+        and:
+            verifyAllRequestsMatched()
+        and:
             received == information
     }
 
@@ -78,6 +90,10 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             def received = client.update(id, form)
         then:
+            verifyPatchInformationRequest(information.id, form)
+        and:
+            verifyAllRequestsMatched()
+        and:
             received == information
     }
 
@@ -93,6 +109,10 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             def received = client.replace(id, form)
         then:
+            verifyPutInformationRequest(information.id, form)
+        and:
+            verifyAllRequestsMatched()
+        and:
             received == information
     }
 
@@ -104,6 +124,10 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             def received = client.delete(information.id)
         then:
+            verifyDeleteInformationRequest(information.id)
+        and:
+            verifyAllRequestsMatched()
+        and:
             received == information
     }
 
@@ -122,6 +146,11 @@ class InformationProducerClientIT extends Specification implements InformationPr
                 contains('[400 Bad Request] during [GET] to')
                 contains(information.id)
             }
+        and:
+            verifyGetInformationRequest(information.id)
+        and:
+            verifyAllRequestsMatched()
+
     }
 
     def 'should throw exception when returned not found'() {
@@ -139,6 +168,10 @@ class InformationProducerClientIT extends Specification implements InformationPr
                 contains('[404 Not Found] during [GET] to')
                 contains(information.id)
             }
+        and:
+            verifyGetInformationRequest(information.id)
+        and:
+            verifyAllRequestsMatched()
     }
 
     def 'should throw exception when returned internal server error'() {
@@ -156,6 +189,20 @@ class InformationProducerClientIT extends Specification implements InformationPr
                 contains('[500 Server Error] during [GET] to')
                 contains(information.id)
             }
+        and:
+            verifyGetInformationRequest(information.id)
+        and:
+            verifyAllRequestsMatched()
     }
 
+    @Override
+    WireMockServer getServer() {
+        return wireMockServer
+    }
+
+    @Override
+    void setServer(WireMockServer server) {
+        InformationProducerVerifying.super.setServer(server)
+        InformationProducerStubbing.super.setServer(server)
+    }
 }

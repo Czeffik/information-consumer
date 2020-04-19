@@ -1,6 +1,6 @@
 package com.trzewik.information.consumer.interfaces.rest.information
 
-import com.trzewik.information.consumer.domain.information.Car
+
 import com.trzewik.information.consumer.domain.information.Information
 import com.trzewik.information.consumer.domain.information.InformationCreation
 import com.trzewik.information.consumer.domain.information.InformationFormCreation
@@ -19,17 +19,16 @@ import spock.lang.Specification
     classes = [RestInterfacesConfiguration, RestInterfacesTestConfig],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-class InformationControllerIT extends Specification implements InformationCreation, InformationRequestSender, InformationFormCreation {
+class InformationControllerIT extends Specification implements InformationCreation, InformationRequestSender, InformationFormCreation, InformationResponseValidator {
     @Autowired
     InformationService informationServiceMock
 
     @LocalServerPort
     int localServerPort
 
-    JsonSlurper slurper = new JsonSlurper()
-
     def setup() {
         port = localServerPort
+        slurper = new JsonSlurper()
     }
 
     def 'should get information by id'() {
@@ -119,36 +118,6 @@ class InformationControllerIT extends Specification implements InformationCreati
         and:
             response.statusCode() == 500
         and:
-            with(parseResponse(response)) {
-                message == exceptionMessage
-                code == 500
-                reason == 'Internal Server Error'
-            }
-    }
-
-    boolean validateResponse(Response response, Information information) {
-        with(parseResponse(response)) {
-            id == information.id
-            description == information.description
-            message == information.message
-            with(person) {
-                name == information.person.name
-                lastName == information.person.lastName
-            }
-            cars.size() == information.cars.size()
-            validateCars(cars, information.cars)
-        }
-        true
-    }
-
-    def parseResponse(Response response) {
-        return slurper.parseText(response.body().asString())
-    }
-
-    boolean validateCars(parsedCars, List<Car> cars) {
-        parsedCars.each { pc ->
-            assert cars.any { it == createCar(new CarCreator(brand: pc.brand, model: pc.model, color: pc.color)) }
-        }
-        return true
+            validateErrorResponse(response, exceptionMessage)
     }
 }
