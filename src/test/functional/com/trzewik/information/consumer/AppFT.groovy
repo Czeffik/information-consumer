@@ -9,6 +9,7 @@ import com.trzewik.information.consumer.infrastructure.rest.information.Informat
 import com.trzewik.information.consumer.infrastructure.rest.information.InformationProducerVerifying
 import com.trzewik.information.consumer.interfaces.rest.information.InformationRequestSender
 import com.trzewik.information.consumer.interfaces.rest.information.InformationResponseValidator
+import com.trzewik.information.consumer.interfaces.rest.swagger.SwaggerRequestSender
 import groovy.json.JsonSlurper
 import io.restassured.response.Response
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +31,7 @@ import spock.lang.Specification
 @DirtiesContext
 @AutoConfigureWireMock(port = 9080)
 class AppFT extends Specification implements InformationCreation, InformationRequestSender, InformationProducerVerifying,
-    InformationFormCreation, InformationProducerStubbing, InformationResponseValidator {
+    InformationFormCreation, InformationProducerStubbing, InformationResponseValidator, SwaggerRequestSender, FileOperator {
 
     @LocalServerPort
     int localServerPort
@@ -39,8 +40,6 @@ class AppFT extends Specification implements InformationCreation, InformationReq
     WireMockServer wireMockServer
 
     def setup() {
-        setServer(wireMockServer)
-        port = localServerPort
         slurper = new JsonSlurper()
     }
 
@@ -139,15 +138,42 @@ class AppFT extends Specification implements InformationCreation, InformationReq
             validateResponse(response, information)
     }
 
+    def 'should return 200 and swagger json file on swagger api docs endpoint'() {
+        when:
+            def response = getApiDocsRequest()
+        then:
+            with(response) {
+                statusCode() == 200
+                contentType.contains('application/json')
+            }
+        when:
+            def body = response.body().asString()
+            def parsedBody = slurper.parseText(body)
+        then:
+            parsedBody.tags.size() == 1
+        and:
+            parsedBody.tags.collect { it.name }.contains('information-controller')
+        and:
+            saveFile(body)
+    }
 
-    @Override
-    void setServer(WireMockServer server) {
-        InformationProducerStubbing.super.setServer(server)
-        InformationProducerVerifying.super.setServer(server)
+    def 'should return 200 and swagger ui on swagger ui endpoint'() {
+        when:
+            def response = getSwaggerUIRequest()
+        then:
+            with(response) {
+                statusCode() == 200
+                contentType.contains('text/html')
+            }
     }
 
     @Override
     WireMockServer getServer() {
         return wireMockServer
+    }
+
+    @Override
+    int getPort() {
+        return localServerPort
     }
 }

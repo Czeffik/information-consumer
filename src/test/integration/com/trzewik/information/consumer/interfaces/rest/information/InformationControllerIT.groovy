@@ -27,7 +27,6 @@ class InformationControllerIT extends Specification implements InformationCreati
     int localServerPort
 
     def setup() {
-        port = localServerPort
         slurper = new JsonSlurper()
     }
 
@@ -119,5 +118,10 @@ class InformationControllerIT extends Specification implements InformationCreati
             response.statusCode() == 500
         and:
             validateErrorResponse(response, exceptionMessage)
+    }
+
+    @Override
+    int getPort() {
+        return localServerPort
     }
 }

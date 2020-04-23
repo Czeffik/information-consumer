@@ -36,10 +36,6 @@ class InformationProducerClientIT extends Specification implements InformationPr
     @Autowired
     WireMockServer wireMockServer
 
-    def setup() {
-        setServer(wireMockServer)
-    }
-
     def cleanup() {
         clearStubs()
     }
@@ -198,11 +194,5 @@ class InformationProducerClientIT extends Specification implements InformationPr
     @Override
     WireMockServer getServer() {
         return wireMockServer
-    }
-
-    @Override
-    void setServer(WireMockServer server) {
-        InformationProducerVerifying.super.setServer(server)
-        InformationProducerStubbing.super.setServer(server)
     }
 }

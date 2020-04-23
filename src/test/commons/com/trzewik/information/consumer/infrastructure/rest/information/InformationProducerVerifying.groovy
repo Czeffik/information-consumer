@@ -11,7 +11,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 
 trait InformationProducerVerifying {
-    WireMockServer server
+    abstract WireMockServer getServer()
 
     void verifyPostInformationRequest(InformationForm form) {
         server.verify(1, postRequestedFor(urlEqualTo('/information')))

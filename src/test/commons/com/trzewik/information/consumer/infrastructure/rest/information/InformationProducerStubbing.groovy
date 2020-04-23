@@ -16,7 +16,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import static com.trzewik.information.consumer.common.JsonHelper.toJson
 
 trait InformationProducerStubbing {
-    WireMockServer server
+    abstract WireMockServer getServer()
 
     void stubGetInformation(Information information) {
         server.stubFor(get(urlEqualTo("/information/${information.id}"))
