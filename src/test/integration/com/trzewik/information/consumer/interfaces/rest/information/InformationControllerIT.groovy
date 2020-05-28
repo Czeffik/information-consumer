@@ -1,6 +1,5 @@
 package com.trzewik.information.consumer.interfaces.rest.information
 
-
 import com.trzewik.information.consumer.domain.information.Information
 import com.trzewik.information.consumer.domain.information.InformationCreation
 import com.trzewik.information.consumer.domain.information.InformationFormCreation
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Shared
 import spock.lang.Specification
 
 @ActiveProfiles([RestInterfacesTestConfig.PROFILE, 'test'])
@@ -20,15 +20,14 @@ import spock.lang.Specification
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 class InformationControllerIT extends Specification implements InformationCreation, InformationRequestSender, InformationFormCreation, InformationResponseValidator {
+    @Shared
+    JsonSlurper slurper = new JsonSlurper()
+
     @Autowired
     InformationService informationServiceMock
 
     @LocalServerPort
-    int localServerPort
-
-    def setup() {
-        slurper = new JsonSlurper()
-    }
+    int port
 
     def 'should get information by id'() {
         given:
@@ -118,10 +117,5 @@ class InformationControllerIT extends Specification implements InformationCreati
             response.statusCode() == 500
         and:
             validateErrorResponse(response, exceptionMessage)
-    }
-
-    @Override
-    int getPort() {
-        return localServerPort
     }
 }

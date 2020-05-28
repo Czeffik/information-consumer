@@ -7,7 +7,7 @@ import groovy.json.JsonSlurper
 import io.restassured.response.Response
 
 trait InformationResponseValidator {
-    JsonSlurper slurper
+    abstract JsonSlurper getSlurper()
 
     boolean validateErrorResponse(Response response, String exceptionMessage) {
         def parsedResponse = parseResponse(response)

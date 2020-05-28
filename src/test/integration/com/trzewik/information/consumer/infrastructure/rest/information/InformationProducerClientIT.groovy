@@ -34,7 +34,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
     InformationProducerClient client
 
     @Autowired
-    WireMockServer wireMockServer
+    WireMockServer server
 
     def cleanup() {
         clearStubs()
@@ -189,10 +189,5 @@ class InformationProducerClientIT extends Specification implements InformationPr
             verifyGetInformationRequest(information.id)
         and:
             verifyAllRequestsMatched()
-    }
-
-    @Override
-    WireMockServer getServer() {
-        return wireMockServer
     }
 }
