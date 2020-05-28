@@ -18,6 +18,7 @@ import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Shared
 import spock.lang.Specification
 
 @ActiveProfiles(['test'])
@@ -33,15 +34,14 @@ import spock.lang.Specification
 class AppFT extends Specification implements InformationCreation, InformationRequestSender, InformationProducerVerifying,
     InformationFormCreation, InformationProducerStubbing, InformationResponseValidator, SwaggerRequestSender, FileOperator {
 
+    @Shared
+    JsonSlurper slurper = new JsonSlurper()
+
     @LocalServerPort
-    int localServerPort
+    int port
 
     @Autowired
-    WireMockServer wireMockServer
-
-    def setup() {
-        slurper = new JsonSlurper()
-    }
+    WireMockServer server
 
     def cleanup() {
         clearStubs()
@@ -165,15 +165,5 @@ class AppFT extends Specification implements InformationCreation, InformationReq
                 statusCode() == 200
                 contentType.contains('text/html')
             }
-    }
-
-    @Override
-    WireMockServer getServer() {
-        return wireMockServer
-    }
-
-    @Override
-    int getPort() {
-        return localServerPort
     }
 }
