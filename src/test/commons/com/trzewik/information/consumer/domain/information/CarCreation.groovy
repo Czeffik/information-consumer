@@ -18,7 +18,7 @@ trait CarCreation {
     static class CarCreator {
         String brand = 'example brand'
         String model = 'example model'
-        String color = 'GREEN'
+        Color color = Color.GREEN
 
         CarCreator() {}
 
