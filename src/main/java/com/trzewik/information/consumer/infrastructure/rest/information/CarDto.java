@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 public class CarDto {
     private String brand;
     private String model;
-    private String color;
+    private Color color;
 
     public Car toCar() {
         return new Car(
             brand,
             model,
-            color
+            color.name()
         );
     }
 }
