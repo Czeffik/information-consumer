@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * You can create your FeignConfiguration class for defining some behaviour, for example:
@@ -27,48 +28,59 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface InformationProducerClient extends InformationClient {
 
     default Information get(String id) {
-        return getInformation(id).toInformation();
+        return getInformation(id, "").toInformation();
     }
 
     @InteractionInfo(responseStatus = HttpStatus.OK)
     @GetMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    InformationDto getInformation(@PathVariable(value = "id") String id);
+    InformationDto getInformation(
+        @PathVariable(value = "id") String id,
+        @RequestHeader(value = "important") String important
+    );
 
     default Information create(InformationService.InformationForm form) {
-        return createInformation(form).toInformation();
+        return createInformation(form, "").toInformation();
     }
 
     @InteractionInfo(responseStatus = HttpStatus.CREATED)
     @PostMapping(value = "/information", consumes = MediaType.APPLICATION_JSON_VALUE)
-    InformationDto createInformation(@RequestBody InformationService.InformationForm form);
+    InformationDto createInformation(
+        @RequestBody InformationService.InformationForm form,
+        @RequestHeader(value = "important") String important
+    );
 
     default Information replace(String id, InformationService.InformationForm form) {
-        return replaceInformation(id, form).toInformation();
+        return replaceInformation(id, form, "").toInformation();
     }
 
     @InteractionInfo(responseStatus = HttpStatus.OK)
     @PutMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     InformationDto replaceInformation(
         @PathVariable(value = "id") String id,
-        @RequestBody InformationService.InformationForm form
+        @RequestBody InformationService.InformationForm form,
+        @RequestHeader(value = "important") String important
     );
 
     default Information update(String id, InformationService.InformationForm form) {
-        return updateInformation(id, form).toInformation();
+        return updateInformation(id, form, "").toInformation();
     }
 
     @InteractionInfo(responseStatus = HttpStatus.OK)
     @PatchMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     InformationDto updateInformation(
         @PathVariable(value = "id") String id,
-        @RequestBody InformationService.InformationForm form
+        @RequestBody InformationService.InformationForm form,
+        @RequestHeader(value = "important") String important
     );
 
     default Information delete(String id) {
-        return deleteInformation(id).toInformation();
+        return deleteInformation(id, "").toInformation();
     }
 
     @InteractionInfo(responseStatus = HttpStatus.OK)
     @DeleteMapping(value = "/information/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    InformationDto deleteInformation(@PathVariable(value = "id") String id);
+    InformationDto deleteInformation(
+        @PathVariable(value = "id") String id,
+        @RequestHeader(value = "important") String important
+    );
 }
