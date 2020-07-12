@@ -2,13 +2,11 @@ package com.trzewik.information.consumer.infrastructure.rest.information;
 
 import com.trzewik.information.consumer.domain.information.Information;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@NoArgsConstructor
 public class InformationDto {
     private String id;
     private String description;
