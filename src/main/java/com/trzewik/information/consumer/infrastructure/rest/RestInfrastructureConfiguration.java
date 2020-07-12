@@ -1,6 +1,7 @@
 package com.trzewik.information.consumer.infrastructure.rest;
 
 import com.trzewik.information.consumer.infrastructure.rest.information.InformationProducerClient;
+import feign.codec.ErrorDecoder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.cloud.commons.httpclient.ApacheHttpClientConnectionManagerFactory;
@@ -20,6 +21,11 @@ import org.springframework.context.annotation.Import;
 @EnableFeignClients(clients = {InformationProducerClient.class})
 @Configuration
 public class RestInfrastructureConfiguration {
+
+    @Bean
+    ErrorDecoder errorDecoder() {
+        return new FeignErrorDecoder();
+    }
 
     /*
     Below beans adding possibility to use PATCH method in FeignClients.

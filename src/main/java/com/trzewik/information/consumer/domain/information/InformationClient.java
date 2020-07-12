@@ -10,4 +10,7 @@ public interface InformationClient {
     Information replace(String id, InformationService.InformationForm form);
 
     Information delete(String id);
+
+    class Exception extends RuntimeException {
+    }
 }
