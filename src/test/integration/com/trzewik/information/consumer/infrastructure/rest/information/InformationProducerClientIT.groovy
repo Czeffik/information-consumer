@@ -1,10 +1,11 @@
 package com.trzewik.information.consumer.infrastructure.rest.information
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.trzewik.information.consumer.domain.information.InformationClient
 import com.trzewik.information.consumer.domain.information.InformationCreation
 import com.trzewik.information.consumer.domain.information.InformationFormCreation
+import com.trzewik.information.consumer.infrastructure.rest.RestClientException
 import com.trzewik.information.consumer.infrastructure.rest.RestInfrastructureConfiguration
-import feign.FeignException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
@@ -135,13 +136,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             client.get(information.id)
         then:
-            FeignException ex = thrown()
-        and:
-            with(ex.message) {
-                contains(errorResponseBody())
-                contains('[400 Bad Request] during [GET] to')
-                contains(information.id)
-            }
+            thrown(InformationClient.Exception)
         and:
             verifyGetInformationRequest(information.id)
         and:
@@ -157,13 +152,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             client.get(information.id)
         then:
-            FeignException ex = thrown()
-        and:
-            with(ex.message) {
-                contains(errorResponseBody())
-                contains('[404 Not Found] during [GET] to')
-                contains(information.id)
-            }
+            thrown(RestClientException.NotFound)
         and:
             verifyGetInformationRequest(information.id)
         and:
@@ -178,13 +167,7 @@ class InformationProducerClientIT extends Specification implements InformationPr
         when:
             client.get(information.id)
         then:
-            FeignException ex = thrown()
-        and:
-            with(ex.message) {
-                contains(errorResponseBody())
-                contains('[500 Server Error] during [GET] to')
-                contains(information.id)
-            }
+            thrown(RestClientException.Error)
         and:
             verifyGetInformationRequest(information.id)
         and:

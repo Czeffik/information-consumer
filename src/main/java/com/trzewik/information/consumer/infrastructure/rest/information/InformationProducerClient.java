@@ -4,6 +4,7 @@ import com.hltech.pact.gen.domain.client.feign.InteractionInfo;
 import com.trzewik.information.consumer.domain.information.Information;
 import com.trzewik.information.consumer.domain.information.InformationClient;
 import com.trzewik.information.consumer.domain.information.InformationService;
+import com.trzewik.information.consumer.infrastructure.rest.RestClientException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.http.HttpStatus;
@@ -24,11 +25,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
  *
  * @see FeignClientsConfiguration for the defaults
  */
-@FeignClient(name = "information-producer", url = "${url.information.producer}")
+@FeignClient(
+    name = "information-producer",
+    url = "${url.information.producer}"
+)
 public interface InformationProducerClient extends InformationClient {
 
     default Information get(String id) {
-        return getInformation(id, "").toInformation();
+        try {
+            return getInformation(id, "").toInformation();
+        } catch (RestClientException.BadRequest ex) {
+            throw new InformationClient.Exception();
+        }
     }
 
     @InteractionInfo(responseStatus = HttpStatus.OK)
